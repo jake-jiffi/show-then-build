@@ -1,0 +1,219 @@
+<!doctype html>
+<!--
+  show-then-build preview template.
+  Copy this file to previews/YYYY-MM-DD-short-name.html in the project and fill it in.
+
+  How to fill it in:
+  - Replace every {{PLACEHOLDER}}.
+  - Blocks marked REPEAT can be copied as many times as needed. Blocks marked OPTIONAL can be deleted.
+  - Put the prototype's own styles inside the #stage element's scope (prefix selectors with #stage) so they
+    don't fight the page styles. Use the project's real colours, type and components there.
+  - Keep it one file. No network calls, no CDN links, no real customer data.
+  - Leave the script at the bottom alone. It collects the answers for "Copy my answers".
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview: {{TITLE}}</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --ink: #161a23; --muted: #566072; --line: #d9dee7;
+    --accent: #2456d6; --accent-ink: #ffffff; --soft: #eef2fb; --good: #14614f; --warn-bg: #fff4d6; --warn-ink: #6b4a00;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #11141b; --card: #1a1f29; --ink: #eef1f6; --muted: #a3adbd; --line: #313846;
+      --accent: #7ea2ff; --accent-ink: #0b1020; --soft: #1f2738; --good: #7fd6bd; --warn-bg: #3a2f12; --warn-ink: #ffd98a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 32px 20px 96px; }
+  .flag { display: inline-block; background: var(--warn-bg); color: var(--warn-ink); font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 6px; }
+  h1 { font-size: 32px; line-height: 1.15; margin: 14px 0 6px; letter-spacing: -0.01em; }
+  .meta { color: var(--muted); font-size: 14px; margin: 0; }
+  section { margin-top: 40px; }
+  h2 { font-size: 20px; margin: 0 0 12px; }
+  h3 { font-size: 16px; margin: 0 0 6px; }
+  p { margin: 0 0 10px; max-width: 70ch; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .after .label { color: var(--good); }
+  .sample { font-size: 12px; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; padding: 2px 8px; display: inline-block; }
+  .stagebar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  button, .btn { font: inherit; font-weight: 600; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 8px 16px; min-height: 40px; cursor: pointer; }
+  button[aria-pressed="true"] { background: var(--soft); border-color: var(--accent); }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  #stage { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); overflow: auto; margin: 0 auto; transition: max-width 180ms ease; }
+  #stage.phone { max-width: 390px; }
+  .options { display: grid; gap: 12px; }
+  .option { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; cursor: pointer; }
+  .option input, .choice input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent); }
+  .rec { display: inline-block; font-size: 12px; font-weight: 700; color: var(--good); border: 1px solid currentColor; border-radius: 6px; padding: 1px 7px; margin-left: 6px; vertical-align: 2px; }
+  fieldset { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); padding: 18px 20px; margin: 0 0 12px; }
+  legend { font-weight: 700; padding: 0 6px; }
+  .choice { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 6px 0; cursor: pointer; }
+  .impact { display: block; color: var(--muted); font-size: 14px; }
+  textarea { width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; min-height: 64px; }
+  .comment { display: block; margin-top: 10px; font-size: 14px; color: var(--muted); }
+  ul { margin: 0; padding-left: 20px; }
+  #answers-out { margin-top: 12px; min-height: 160px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; }
+  #copied { margin-left: 10px; color: var(--good); font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { #stage { transition: none; } }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header>
+    <span class="flag">Preview. Nothing has been built yet.</span>
+    <h1 id="preview-title">{{TITLE}}</h1>
+    <p class="meta">{{DATE}} · {{PROJECT_NAME}}</p>
+  </header>
+
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">What and why</h2>
+    <!-- Three sentences at most, in plain language. -->
+    <p>{{WHAT_AND_WHY}}</p>
+  </section>
+
+  <section aria-labelledby="h-ba">
+    <h2 id="h-ba">Before and after</h2>
+    <div class="two">
+      <div class="card before">
+        <div class="label">Before (how it is today)</div>
+        <!-- Visual change: recreate the real current state. Non-visual change: a concrete example of what happens now. -->
+        {{BEFORE}}
+      </div>
+      <div class="card after">
+        <div class="label">After (proposed)</div>
+        {{AFTER}}
+      </div>
+    </div>
+  </section>
+
+  <!-- OPTIONAL: delete this whole section when there is nothing visual or interactive to try. -->
+  <section aria-labelledby="h-try">
+    <h2 id="h-try">Try it</h2>
+    <div class="stagebar">
+      <button type="button" id="w-desktop" aria-pressed="true">Desktop width</button>
+      <button type="button" id="w-phone" aria-pressed="false">Phone width</button>
+      <span class="sample">Sample data, not real records</span>
+    </div>
+    <div id="stage">
+      <!-- The working prototype of the "after", in the project's own look. Scope its CSS with #stage. -->
+      {{PROTOTYPE}}
+    </div>
+  </section>
+
+  <!-- OPTIONAL: Open level only. Two or three directions that are really different. Mark exactly one as recommended. -->
+  <section aria-labelledby="h-options">
+    <h2 id="h-options">Options</h2>
+    <div class="options" role="radiogroup" aria-labelledby="h-options">
+      <!-- REPEAT: one label per option. -->
+      <label class="card option">
+        <input type="radio" name="option" value="{{OPTION_LETTER}}: {{OPTION_NAME}}">
+        <span>
+          <h3>{{OPTION_LETTER}}. {{OPTION_NAME}} <span class="rec">Recommended</span></h3>
+          <p>{{OPTION_WHAT_IT_IS}}</p>
+          <p class="impact">Costs: {{OPTION_TRADE_OFF}}</p>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <!-- OPTIONAL: delete when there are no open questions. Only questions whose answer changes what gets built. -->
+  <section aria-labelledby="h-decisions">
+    <h2 id="h-decisions">Decisions</h2>
+    <!-- REPEAT: one fieldset per question. Give each a unique radio name (d1, d2, ...). -->
+    <fieldset data-decision>
+      <legend>{{QUESTION}}</legend>
+      <!-- REPEAT: one label per choice. -->
+      <label class="choice">
+        <input type="radio" name="d1" value="{{CHOICE}}">
+        <span>{{CHOICE}} <span class="rec">Recommended</span>
+          <span class="impact">{{WHAT_THIS_CHOICE_CHANGES}}</span></span>
+      </label>
+      <label class="comment">Comment (optional)
+        <textarea></textarea>
+      </label>
+    </fieldset>
+  </section>
+
+  <section aria-labelledby="h-not">
+    <h2 id="h-not">Not changing</h2>
+    <ul>
+      <!-- REPEAT -->
+      <li>{{THING_THAT_STAYS_AS_IT_IS}}</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="h-send">
+    <h2 id="h-send">Send your answers</h2>
+    <label class="comment" style="margin-top:0">Anything else to change or check?
+      <textarea id="anything-else"></textarea>
+    </label>
+    <p style="margin-top:14px">
+      <button type="button" class="primary" id="copy-answers">Copy my answers</button>
+      <span id="copied" role="status" aria-live="polite"></span>
+    </p>
+    <p class="meta">Then paste them back into the chat. If copying is blocked, select the text in the box below and copy it yourself.</p>
+    <textarea id="answers-out" readonly aria-label="Your answers as text"></textarea>
+  </section>
+
+</main>
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var d = document.getElementById('w-desktop'), p = document.getElementById('w-phone');
+  function setWidth(phone) {
+    if (!stage) return;
+    stage.classList.toggle('phone', phone);
+    d.setAttribute('aria-pressed', String(!phone));
+    p.setAttribute('aria-pressed', String(phone));
+  }
+  if (d && p) { d.addEventListener('click', function () { setWidth(false); }); p.addEventListener('click', function () { setWidth(true); }); }
+
+  function text(el) { return (el ? el.textContent : '').replace(/\s+/g, ' ').trim(); }
+
+  function buildAnswers() {
+    var out = [];
+    out.push('# Answers: ' + text(document.getElementById('preview-title')));
+    out.push('Preview file: ' + (location.pathname.split('/').pop() || 'preview'));
+    var opts = document.querySelectorAll('input[name="option"]');
+    if (opts.length) {
+      var picked = document.querySelector('input[name="option"]:checked');
+      out.push('', 'Option chosen: ' + (picked ? picked.value : 'NOT ANSWERED'));
+    }
+    var sets = document.querySelectorAll('fieldset[data-decision]');
+    if (sets.length) out.push('', '## Decisions');
+    Array.prototype.forEach.call(sets, function (fs, i) {
+      var chosen = fs.querySelector('input[type="radio"]:checked');
+      var note = fs.querySelector('textarea');
+      out.push((i + 1) + '. ' + text(fs.querySelector('legend')));
+      out.push('   Answer: ' + (chosen ? chosen.value : 'NOT ANSWERED'));
+      if (note && note.value.trim()) out.push('   Comment: ' + note.value.trim());
+    });
+    var extra = document.getElementById('anything-else');
+    out.push('', '## Anything else', extra && extra.value.trim() ? extra.value.trim() : 'Nothing');
+    return out.join('\n');
+  }
+
+  var btn = document.getElementById('copy-answers');
+  var box = document.getElementById('answers-out');
+  var said = document.getElementById('copied');
+  if (btn) btn.addEventListener('click', function () {
+    var t = buildAnswers();
+    box.value = t;
+    function ok() { said.textContent = 'Copied. Paste it into the chat.'; }
+    function manual() { box.focus(); box.select(); said.textContent = 'Select the text below and copy it.'; }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok, manual); }
+    else { manual(); }
+  });
+})();
+</script>
+</body>
+</html>
