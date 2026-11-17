@@ -47,7 +47,7 @@
   button[aria-pressed="true"] { background: var(--soft); border-color: var(--accent); }
   button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
   button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-  #stage { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); overflow: auto; margin: 0 auto; transition: max-width 180ms ease; }
+  #stage { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); overflow: auto; margin: 0 auto; transition: max-width 180ms ease; container-type: inline-size; }
   #stage.phone { max-width: 390px; }
   .options { display: grid; gap: 12px; }
   .option { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; cursor: pointer; }
@@ -104,7 +104,10 @@
       <span class="sample">Sample data, not real records</span>
     </div>
     <div id="stage">
-      <!-- The working prototype of the "after", in the project's own look. Scope its CSS with #stage. -->
+      <!-- The working prototype of the "after", in the project's own look. Scope its CSS with #stage.
+           The Phone width button narrows this box, not the browser window. So write the narrow layout as
+           @container (max-width: 600px) { ... }, never @media (max-width: ...): a media query reads the
+           window and will not change when the button is pressed. -->
       {{PROTOTYPE}}
     </div>
   </section>

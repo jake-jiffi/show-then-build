@@ -67,7 +67,9 @@ Put in it, in this order:
 3. **Try it.** For anything visual or interactive, a working prototype of the after, in the
    project's own colours, type and components, so it reads as their product and not a mock-up.
    Make the states that matter reachable: empty, error, long text, phone width. Use sample data
-   and label it as sample.
+   and label it as sample. The Phone width button narrows the prototype's box, not the browser
+   window, so write the narrow layout with `@container`, not `@media`. Press the button and
+   check the layout changes before you hand the preview over.
 4. **Options** (Open level). Two or three directions that are really different, not three shades
    of one idea. For each: what it is and what it costs. Mark one as recommended and say why.
 5. **Decisions.** Every open question as a form item: the question, the choices, which one you
@@ -86,8 +88,9 @@ Tell the person, in a few lines: where the preview is and how to open it, what y
 what you need from them (pick an option, answer the decisions, press **Copy my answers**, paste
 them back). The preview does the explaining, so don't repeat its contents in chat. Then wait.
 
-When the answers come back, read all of them before acting. Anything marked NOT ANSWERED gets
-your recommended choice, and you say so. If the feedback changes the design more than slightly,
+When the answers come back, read all of them before acting. Anything marked NOT ANSWERED is
+still open: list each one with the choice you recommend and get a yes before you build. Don't
+fill it in for them. If the feedback changes the design more than slightly,
 update the preview and get a yes on the new version. The approved preview is the contract for the
 build.
 
